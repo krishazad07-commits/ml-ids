@@ -1,0 +1,318 @@
+/* ══════════════════════════════════════════════
+   Live Monitor
+   ══════════════════════════════════════════════ */
+
+.lm { position: relative; }
+
+/* ── threat flash: red bloom when a MISSED arrives ──
+   Fixed overlay, fades in fast and decays slowly.    */
+.lm::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse 130% 55% at 50% 100%,
+    var(--danger-glow),
+    transparent 70%
+  );
+  transition: opacity 0.7s ease-out;
+}
+.lm.flash::after {
+  opacity: 1;
+  transition: opacity 0.09s ease-in;
+}
+
+/* ── control bar ────────────────────────────── */
+.lm-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.lm-spacer { flex: 1; }
+
+.lm-meta {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.btn {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel-2);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: background 0.18s ease, box-shadow 0.18s ease,
+              color 0.18s ease, border-color 0.18s ease;
+}
+.btn:hover:not(:disabled) { color: var(--text); border-color: #2b3a4d; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn.go {
+  background: rgba(0, 230, 160, 0.07);
+  border-color: var(--accent-deep);
+  color: var(--accent);
+}
+.btn.go:hover {
+  background: rgba(0, 230, 160, 0.14);
+  color: var(--accent);
+  box-shadow: 0 0 20px rgba(0, 230, 160, 0.16);
+}
+
+.btn.stop {
+  background: rgba(255, 77, 94, 0.07);
+  border-color: #5c1f27;
+  color: var(--danger);
+}
+.btn.stop:hover {
+  background: rgba(255, 77, 94, 0.14);
+  color: var(--danger);
+  box-shadow: 0 0 20px rgba(255, 77, 94, 0.16);
+}
+
+/* ── status + pulsing live dot ──────────────── */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.status .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+.status.live { color: var(--accent); }
+.status.live .dot {
+  background: var(--accent);
+  animation: dot-pulse 1.6s ease-in-out infinite;
+}
+.status.bad { color: var(--danger); }
+.status.bad .dot { background: var(--danger); }
+
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); opacity: 1; }
+  55%      { box-shadow: 0 0 0 7px rgba(0, 230, 160, 0); opacity: 0.5; }
+}
+
+/* ── stat cards ─────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  position: relative;
+  padding: 15px 16px 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.stat::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--line);
+}
+.stat.tp::before { background: var(--accent); }
+.stat.fn::before { background: var(--danger); }
+.stat.fp::before { background: var(--warn);   }
+.stat.tn::before { background: var(--info);   }
+
+.stat-v {
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 9px;
+  color: var(--text);
+}
+.stat.tp .stat-v { color: var(--accent); }
+.stat.fn .stat-v { color: var(--danger); }
+.stat.fp .stat-v { color: var(--warn);   }
+.stat.tn .stat-v { color: var(--info);   }
+
+/* ── odometer ───────────────────────────────── */
+.odo { display: inline-flex; align-items: flex-start; }
+
+.odo-d {
+  display: inline-block;
+  width: 1ch;        /* exactly one monospace cell — pins the width */
+  height: 1em;
+  overflow: hidden;  /* the window the digit strip slides behind */
+  line-height: 1;
+}
+.odo-col {
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.22, 0.9, 0.24, 1);
+}
+.odo-col span { display: block; height: 1em; line-height: 1; }
+
+.odo-s { display: inline-block; line-height: 1; }
+
+/* ── feed table ─────────────────────────────── */
+.feed { padding-bottom: 0; }
+
+.feed-sub {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-faint);
+}
+
+.feed-scroll {
+  max-height: 540px;
+  overflow-y: auto;
+  margin: 0 -18px;
+}
+
+.feed table {
+  width: 100%;
+  border-collapse: separate;   /* required for box-shadow on <tr> */
+  border-spacing: 0;
+  font-size: 12px;
+}
+
+.feed thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 9px 12px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.feed tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.feed .r { text-align: right; }
+.feed .seq { color: var(--text-faint); }
+.feed .svc { color: var(--text); }
+.feed .actual { color: var(--text); }
+
+.feed tbody tr:hover td { background: rgba(255, 255, 255, 0.022); }
+
+.empty td {
+  padding: 42px 12px !important;
+  text-align: center;
+  color: var(--text-faint);
+  font-family: var(--sans);
+}
+
+/* ── row entry + threat bloom ───────────────── */
+.row {
+  animation: row-in 0.5s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(-9px); }
+}
+
+/* MISSED rows get a second, longer animation layered on top */
+.row.fn {
+  animation:
+    row-in 0.5s cubic-bezier(0.2, 0.8, 0.25, 1) both,
+    threat-bloom 1.6s ease-out both;
+  animation-delay: var(--d, 0ms), var(--d, 0ms);
+}
+
+@keyframes threat-bloom {
+  0%   { box-shadow: inset 0 0 44px rgba(255, 77, 94, 0.55); }
+  100% { box-shadow: inset 0 0 0   rgba(255, 77, 94, 0); }
+}
+
+/* ── p(attack) bar ──────────────────────────── */
+.pcell { display: flex; align-items: center; gap: 10px; }
+
+.ptrack {
+  width: 52px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+  flex: none;
+}
+.pfill { display: block; height: 100%; border-radius: 2px; }
+.pfill.lo { background: var(--info); }
+.pfill.hi { background: var(--danger); }
+
+.pnum {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+/* ── predicted column ───────────────────────── */
+.pred { font-weight: 500; }
+.pred.atk { color: var(--danger); }
+.pred.nrm { color: var(--text-faint); }
+
+/* ── verdict badges ─────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  font-family: var(--sans);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+.badge.tp {
+  color: var(--accent);
+  border-color: var(--accent-deep);
+  background: rgba(0, 230, 160, 0.08);
+}
+.badge.tn {
+  color: var(--info);
+  border-color: #22456e;
+  background: rgba(88, 166, 255, 0.07);
+}
+.badge.fn {
+  color: var(--danger);
+  border-color: #6e2530;
+  background: rgba(255, 77, 94, 0.11);
+}
+.badge.fp {
+  color: var(--warn);
+  border-color: #6b4d16;
+  background: rgba(255, 176, 32, 0.08);
+}
+
+@media (max-width: 1180px) {
+  .stats { grid-template-columns: repeat(3, 1fr); }
+}

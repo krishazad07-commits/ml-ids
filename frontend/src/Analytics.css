@@ -1,0 +1,186 @@
+/* ══════════════════════════════════════════════
+   Model Analytics
+   ══════════════════════════════════════════════ */
+
+.mets {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.met {
+  position: relative;
+  padding: 16px 16px 15px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.met::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--line);
+}
+.met.accent::before { background: var(--accent); }
+.met.warn::before   { background: var(--warn);   }
+
+.met-v {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 9px;
+  color: var(--text);
+}
+.met.accent .met-v { color: var(--accent); }
+.met.warn   .met-v { color: var(--warn);   }
+
+.met-n {
+  margin-top: 7px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--text-faint);
+}
+
+/* ── confusion matrix ───────────────────────── */
+.cm-wrap { display: flex; gap: 12px; align-items: stretch; }
+
+.cm-axis-y {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 26px 0 0;
+}
+
+.cm-heads {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.cm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cm-c {
+  padding: 20px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel-2);
+  animation: cm-in 0.55s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes cm-in {
+  from { opacity: 0; transform: scale(0.955); }
+}
+
+.cm-c b {
+  display: block;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 27px;
+  font-weight: 500;
+  line-height: 1;
+}
+.cm-c span {
+  display: block;
+  margin-top: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.cm-c em {
+  display: block;
+  margin-top: 12px;
+  font-style: normal;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.cm-c.tn { border-color: #22456e; background: rgba(88, 166, 255, 0.05); }
+.cm-c.tn b { color: var(--info); }
+.cm-c.tp { border-color: var(--accent-deep); background: rgba(0, 230, 160, 0.05); }
+.cm-c.tp b { color: var(--accent); }
+.cm-c.fp { border-color: #6b4d16; background: rgba(255, 176, 32, 0.05); }
+.cm-c.fp b { color: var(--warn); }
+.cm-c.fn { border-color: #6e2530; background: rgba(255, 77, 94, 0.07); }
+.cm-c.fn b { color: var(--danger); }
+
+/* ── insight strip ──────────────────────────── */
+.insight {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent-deep);
+  border-radius: var(--r);
+  background: var(--panel-2);
+}
+
+.insight-n {
+  flex: none;
+  min-width: 62px;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--accent);
+}
+
+.insight p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-dim);
+}
+.insight b  { color: var(--text); font-weight: 500; }
+.insight em { color: var(--text); font-style: italic; }
+
+/* ── charts ─────────────────────────────────── */
+.chart {
+  margin: 4px -6px 0;
+  animation: chart-in 0.5s ease both;
+}
+
+@keyframes chart-in {
+  from { opacity: 0; }
+}
+
+.recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick-line { stroke: #263243; }
+
+/* ── tooltip ────────────────────────────────── */
+.tip {
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: rgba(8, 12, 18, 0.96);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.55);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.tip-k { color: var(--text-faint); margin-bottom: 5px; }
+.tip-r { display: flex; gap: 16px; justify-content: space-between; color: var(--text-dim); }
+.tip-r b { color: var(--accent); font-weight: 500; }
+
+@media (max-width: 1180px) {
+  .mets { grid-template-columns: repeat(3, 1fr); }
+}

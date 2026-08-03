@@ -1,0 +1,8 @@
+{
+    "model": "XGBoost v1",
+    "chosen_threshold": 0.4600000000000001,
+    "test_accuracy": 0.7956,
+    "test_roc_auc": 0.9658,
+    "threshold_chosen_on": "validation set (no test leakage)",
+    "notes": "Honest evaluation. Test set used once. Accuracy reflects NSL-KDD distribution shift."
+}

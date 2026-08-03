@@ -1,0 +1,121 @@
+/* ══════════════════════════════════════════════
+   AI-IDS · design tokens + global base
+   ══════════════════════════════════════════════ */
+
+:root {
+  color-scheme: dark;
+
+  /* surfaces — deep, saturated, laptop-close viewing */
+  --bg:       #06080c;
+  --panel:    #0b0f16;
+  --panel-2:  #0f1520;
+  --raised:   #131b28;
+
+  /* hairlines */
+  --line:      #1b2534;
+  --line-soft: #111925;
+
+  /* type */
+  --text:       #dbe3ef;
+  --text-dim:   #8593a8;
+  --text-faint: #4d5a6d;
+
+  /* signal colours */
+  --accent:      #00e6a0;   /* phosphor — the live signal, used sparingly */
+  --accent-deep: #007a55;
+  --accent-glow: rgba(0, 230, 160, 0.35);
+
+  --danger:      #ff4d5e;   /* MISSED — the failure that matters */
+  --danger-glow: rgba(255, 77, 94, 0.30);
+  --warn:        #ffb020;   /* FALSE ALARM */
+  --info:        #58a6ff;   /* CLEAN */
+
+  /* type stacks */
+  --mono: 'JetBrains Mono', 'Cascadia Mono', Consolas, ui-monospace, monospace;
+  --sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --r: 3px;   /* terminals are square. 3px, not 12px. */
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── ambient drifting grid ──────────────────────
+   Fixed behind everything, masked so it fades out
+   toward the edges instead of stopping abruptly.  */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -120px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    linear-gradient(var(--line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 10%, transparent 80%);
+          mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 10%, transparent 80%);
+  animation: grid-drift 44s linear infinite;
+}
+
+@keyframes grid-drift {
+  to { transform: translate(46px, 46px); }
+}
+
+/* ── numerics ───────────────────────────────────
+   Every number in this app uses .num or inherits
+   these two lines. Non-negotiable: without
+   tabular-nums, live counters jitter sideways.   */
+.num,
+table td,
+table th {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* ── label style used across both pages ─────── */
+.label {
+  font-family: var(--sans);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ── scrollbars ─────────────────────────────── */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: var(--panel); }
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border: 2px solid var(--panel);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover { background: #2c3a4d; }
+
+::selection { background: var(--accent-deep); color: #fff; }
+
+/* ── accessibility: honour OS motion preference ──
+   Neutralises every animation and transition in
+   the app in one block. Do not delete.           */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
