@@ -1,0 +1,25 @@
+# Python backend lives on Render, not Vercel.
+# Hide every Python/ML artifact from Vercel so it only builds the frontend.
+app.py
+generate_analytics.py
+verify_setup.py
+requirements.txt
+requirements-dev.txt
+pyproject.toml
+Pipfile
+Pipfile.lock
+.python-version
+
+# ML artifacts and datasets
+models/
+data/
+notebooks/
+docs/
+*.pkl
+*.ipynb
+*.png
+
+# Python runtime junk
+__pycache__/
+*.pyc
+venv/
