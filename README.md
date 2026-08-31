@@ -6,6 +6,17 @@ Built as an academic project with an explicit constraint: **report the honest nu
 
 ---
 
+## Live demo
+
+- **Dashboard:** https://ml-ids-kappa.vercel.app
+- **API:** https://ml-ids.onrender.com · [`/docs`](https://ml-ids.onrender.com/docs)
+
+Frontend on Vercel (static Vite build), backend on Render (FastAPI, free tier). The API instance spins down after ~15 minutes of inactivity, so the first request after idle takes ~40 seconds to wake the container — subsequent requests are instant. Hit `/analytics` once to warm it before demoing.
+
+---
+
+## Screenshots
+
 ## Screenshots
 
 **Live Monitor** — replays held-out KDDTest+ connections through the real inference pipeline, colour-coded by confusion-matrix outcome.
