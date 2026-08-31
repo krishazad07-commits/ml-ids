@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import './LiveMonitor.css'
 
-const API         = 'http://localhost:8000'
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const BATCH       = 3       // rows per poll
 const INTERVAL_MS = 2000    // poll period
 const MAX_ROWS    = 50      // feed buffer cap

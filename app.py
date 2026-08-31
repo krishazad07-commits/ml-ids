@@ -33,10 +33,11 @@ FEATURE_COLUMNS = [
 
 app = FastAPI(title="AI-IDS Prediction API")
 # ── Allow the React dev server to call this API from a different port ──
+# CORS: this API is a public read-only demo, so any origin may call it.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,   # must be False when allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -5,7 +5,7 @@ import {
 } from 'recharts'
 import './Analytics.css'
 
-const API = 'http://localhost:8000'
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 /* Honour the OS motion setting in JS — CSS media queries
    cannot reach Recharts' JavaScript-driven animations.   */
